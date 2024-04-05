@@ -2,8 +2,9 @@
 
 import ElementCard from './ElementCard'
 import { Item } from '../models/Item'
-import React, { useState } from 'react'
+import React from 'react'
 import { materials } from './materialImages' // Update this path accordingly
+import { downloadItemsAsCsv } from './csvUtils'
 
 interface Props {
   addItem: () => void
@@ -21,7 +22,7 @@ const ControlPanel: React.FC<Props> = ({
   handleCardClick,
 }) => {
   return (
-    <div className='p-4 bg-custom-background h-screen'>
+    <div className='p-4 bg-custom-background md:h-screen'>
       <div>
         <ul>
           {items.map((item, index) => (
@@ -43,6 +44,14 @@ const ControlPanel: React.FC<Props> = ({
             onClick={addItem}
           >
             Dodaj Płytę
+          </button>
+        </div>
+        <div className='flex justify-center items-center p-4'>
+          <button
+            className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
+            onClick={() => downloadItemsAsCsv(items)}
+          >
+            Wyślij zamówienie
           </button>
         </div>
       </div>

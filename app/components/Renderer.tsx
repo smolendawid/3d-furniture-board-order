@@ -1,6 +1,5 @@
 import React, { useRef, useEffect } from 'react'
 import * as THREE from 'three'
-
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { Item } from '../models/Item'
 
@@ -21,7 +20,12 @@ const Renderer = ({ item }: RendererProps) => {
       veneerB,
       veneerC,
       veneerD,
+      quantity,
     } = item
+
+    // Calculate the total length needed to fit all cuboids with gaps
+    const gap = 10 * depth // Set gap size to 20% of the depth
+    const totalDepth = quantity * depth + (quantity - 1) * gap // Total space needed
 
     const scene = new THREE.Scene()
     scene.background = new THREE.Color('#bcd6e0')
@@ -40,46 +44,51 @@ const Renderer = ({ item }: RendererProps) => {
     loader.load(
       material.imageURL,
       (texture) => {
-        const geometry = new THREE.BoxGeometry(width, height, depth)
-
-        // Default material color
         const colorMaterial = new THREE.MeshBasicMaterial({ color: '#8AC' })
-
-        // Create an array of materials
         const materials = [
           veneerA
             ? new THREE.MeshBasicMaterial({ map: texture })
-            : colorMaterial, // side 1: front
+            : colorMaterial,
           veneerB
             ? new THREE.MeshBasicMaterial({ map: texture })
-            : colorMaterial, // side 2: back
+            : colorMaterial,
           veneerC
             ? new THREE.MeshBasicMaterial({ map: texture })
-            : colorMaterial, // side 3: top
+            : colorMaterial,
           veneerD
             ? new THREE.MeshBasicMaterial({ map: texture })
-            : colorMaterial, // side 4: bottom
-          new THREE.MeshBasicMaterial({ map: texture }), // side 5: right
-          new THREE.MeshBasicMaterial({ map: texture }), // side 6: left
+            : colorMaterial,
+          new THREE.MeshBasicMaterial({ map: texture }),
+          new THREE.MeshBasicMaterial({ map: texture }),
         ]
 
-        const cuboid = new THREE.Mesh(geometry, materials)
-        scene.add(cuboid)
+        // Render cuboids based on quantity
+        for (let i = 0; i < quantity; i++) {
+          const geometry = new THREE.BoxGeometry(width, height, depth)
+          const cuboid = new THREE.Mesh(geometry, materials)
+          const positionOffset = i * (depth + gap) - totalDepth / 2 + depth / 2 // Centering the group
+          cuboid.position.set(0, 0, positionOffset) // Position each cuboid with a gap
+          scene.add(cuboid)
+        }
       },
-      undefined, // onProgress callback not needed here
+      undefined,
       (error) => {
         console.error('An error happened while loading the texture:', error)
       }
     )
 
-    const maxDimension = Math.max(width, height, depth)
-    camera.position.set(maxDimension * 1, maxDimension * 1, maxDimension * 1)
+    const maxDimension = Math.max(width, height, totalDepth)
+    camera.position.set(
+      maxDimension * 1.5,
+      maxDimension * 1.5,
+      maxDimension * 1.5
+    )
     camera.lookAt(scene.position)
 
     const controls = new OrbitControls(camera, renderer.domElement)
     controls.update()
 
-    // Codde to center the cuboid
+    // Code to center the cuboid group and adjust camera aspect ratio
     const aspectRatio =
       mountRef.current!.clientWidth / mountRef.current!.clientHeight
     camera.aspect = aspectRatio
@@ -100,7 +109,7 @@ const Renderer = ({ item }: RendererProps) => {
     return () => {
       mountRef.current!.removeChild(renderer.domElement)
     }
-  }, [item])
+  }, [item]) // You might want to adjust this dependency array based on your needs
 
   return (
     <section

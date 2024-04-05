@@ -36,6 +36,7 @@ export default function Home() {
       width: 80,
       height: 120,
       depth: 2,
+      quantity: 1,
       material: materials[0],
       veneerA: false,
       veneerB: false,
@@ -71,8 +72,8 @@ export default function Home() {
 
           <Header appName='Zamawianie Cięcia' />
 
-          <main className='flex flex-wrap h-screen'>
-            <div className='w-2/5 h-screen'>
+          <main className='flex flex-wrap md:h-screen'>
+            <div className='w-full md:w-2/5 md:h-screen'>
               <ControlPanel
                 addItem={addItem}
                 updateItem={updateItem}
@@ -81,7 +82,7 @@ export default function Home() {
                 handleCardClick={handleCardClick}
               />
             </div>
-            <div className='w-3/5 h-screen bg-custom-background'>
+            <div className='w-full md:w-3/5 md:h-screen bg-custom-background'>
               {items.length !== 0 && (
                 <Renderer item={items[selectedCardIndex]} />
               )}

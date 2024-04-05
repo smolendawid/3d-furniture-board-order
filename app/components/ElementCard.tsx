@@ -83,7 +83,7 @@ const ElementCard: React.FC<
         onChange={handleChange}
         name='name'
       />
-      <div className='grid grid-cols-3 gap-4'>
+      <div className='grid grid-cols-4 gap-4'>
         <input
           className='border rounded w-full p-2'
           type='number'
@@ -100,6 +100,14 @@ const ElementCard: React.FC<
           onChange={handleChange}
           name='height'
         />
+        <input
+          className='border rounded w-full p-2'
+          type='number'
+          placeholder='quantity'
+          value={editableItem.quantity}
+          onChange={handleChange}
+          name='quantity'
+        />
 
         <div className='flex items-center'>
           <select
@@ -115,12 +123,13 @@ const ElementCard: React.FC<
             ))}
           </select>
           <img
+            className='p-2'
             src={selectedMaterialImage}
             style={{ width: '48px', height: '48px', paddingLeft: '8px' }}
           />
         </div>
       </div>
-      <div className='grid grid-cols-4 gap-4'>
+      <div className='grid grid-cols-4 gap-4 p-4'>
         {['veneerA', 'veneerB', 'veneerC', 'veneerD'].map((veneerField) => (
           <div key={veneerField} className='flex items-center'>
             <select

@@ -10,6 +10,7 @@ export interface Item {
   height: number
   depth: number
   material: Material
+  quantity: number
   veneerA: boolean
   veneerB: boolean
   veneerC: boolean
