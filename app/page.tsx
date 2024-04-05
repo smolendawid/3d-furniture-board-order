@@ -56,7 +56,7 @@ export default function Home() {
   }
   return (
     <>
-      {/* <Loading isLoading={isLoading} /> */}
+      <Loading isLoading={isLoading} />
       {!isLoading && (
         <div>
           <Head>

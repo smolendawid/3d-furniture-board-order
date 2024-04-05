@@ -21,12 +21,12 @@ const config: Config = {
       },
       keyframes: {
         fadeOut: {
-          from: { opacity: 1 },
-          to: { opacity: 0 },
+          from: { opacity: '1' },
+          to: { opacity: '0' },
         },
         blurOut: {
-          '0%': { opacity: 1, filter: 'blur(0)' },
-          '100%': { opacity: 0, filter: 'blur(4px)' },
+          '0%': { opacity: '1', filter: 'blur(0)' },
+          '100%': { opacity: '0', filter: 'blur(4px)' },
         },
       },
       animation: {
