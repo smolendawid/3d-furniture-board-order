@@ -4,6 +4,7 @@ export interface Material {
 }
 
 export interface Item {
+  [key: string]: any;
   name: string
   width: number
   height: number
