@@ -34,19 +34,30 @@ const ElementCard: React.FC<
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target
-    const updatedValue =
-      name === 'width' || name === 'height' ? parseInt(value) : value
-    let updatedItem = { ...editableItem }
+    let updatedValue: any = value // Temporarily allowing any type
+
+    // Convert string to boolean if field is one of the veneer fields
+    if (
+      name === 'veneerA' ||
+      name === 'veneerB' ||
+      name === 'veneerC' ||
+      name === 'veneerD'
+    ) {
+      updatedValue = value === 'true'
+    } else if (name === 'width' || name === 'height') {
+      // Convert to integer for width and height
+      updatedValue = parseInt(value)
+    }
+
+    let updatedItem = { ...editableItem, [name]: updatedValue }
 
     if (name === 'material') {
-      // Find the material object by name
+      // Find the material object by name and update
       const material = materials.find((material) => material.name === value)
       if (material) {
-        updatedItem = { ...updatedItem, material }
+        updatedItem.material = material
         setSelectedMaterialImage(material.imageURL)
       }
-    } else {
-      updatedItem = { ...updatedItem, [name]: updatedValue }
     }
 
     setEditableItem(updatedItem)
@@ -108,6 +119,21 @@ const ElementCard: React.FC<
             style={{ width: '48px', height: '48px', paddingLeft: '8px' }}
           />
         </div>
+      </div>
+      <div className='grid grid-cols-4 gap-4'>
+        {['veneerA', 'veneerB', 'veneerC', 'veneerD'].map((veneerField) => (
+          <div key={veneerField} className='flex items-center'>
+            <select
+              className='border rounded w-full p-2'
+              value={editableItem[veneerField]}
+              onChange={handleChange}
+              name={veneerField}
+            >
+              <option value='true'>Okleina</option>
+              <option value='false'>Bez okleiny</option>
+            </select>
+          </div>
+        ))}
       </div>
     </div>
   )

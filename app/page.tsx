@@ -33,9 +33,14 @@ export default function Home() {
   const addItem = () => {
     const newItem: Item = {
       name: `Item ${items.length + 1}`,
-      width: Math.round(Math.random() * 100),
-      height: Math.round(Math.random() * 100),
+      width: 80,
+      height: 120,
+      depth: 2,
       material: materials[0],
+      veneerA: false,
+      veneerB: false,
+      veneerC: false,
+      veneerD: false,
     }
     setItems([...items, newItem])
   }

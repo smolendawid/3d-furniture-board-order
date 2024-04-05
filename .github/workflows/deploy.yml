@@ -3,22 +3,22 @@ name: Deploy Next.js Site to GitHub Pages
 on:
   push:
     branches:
-      - main  # Or your default branch
+      - main # Or your default branch
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v2
-      with:
-        node-version: '18'
-    - name: Install and Build
-      run: |
-        npm install
-        npm run build
-    - name: Deploy
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./out
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+      - name: Install and Build
+        run: |
+          npm install
+          npm run build
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.MY_PERSONAL_TOKEN }}
+          publish_dir: ./out
