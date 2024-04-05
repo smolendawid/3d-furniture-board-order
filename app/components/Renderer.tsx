@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react'
 import * as THREE from 'three'
 
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { Item } from '../models/Item'
 
 interface RendererProps {
@@ -9,7 +9,7 @@ interface RendererProps {
 }
 
 const Renderer = ({ item }: RendererProps) => {
-  const mountRef = useRef(null)
+  const mountRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const {
@@ -34,7 +34,7 @@ const Renderer = ({ item }: RendererProps) => {
     )
     const renderer = new THREE.WebGLRenderer()
     renderer.setSize(window.innerWidth, window.innerHeight)
-    mountRef.current.appendChild(renderer.domElement)
+    mountRef.current?.appendChild(renderer.domElement)
 
     const loader = new THREE.TextureLoader()
     loader.load(
@@ -81,12 +81,12 @@ const Renderer = ({ item }: RendererProps) => {
 
     // Codde to center the cuboid
     const aspectRatio =
-      mountRef.current.clientWidth / mountRef.current.clientHeight
+      mountRef.current!.clientWidth / mountRef.current!.clientHeight
     camera.aspect = aspectRatio
     camera.updateProjectionMatrix()
     renderer.setSize(
-      mountRef.current.clientWidth,
-      mountRef.current.clientHeight
+      mountRef.current!.clientWidth,
+      mountRef.current!.clientHeight
     )
 
     const animate = function () {
@@ -98,7 +98,7 @@ const Renderer = ({ item }: RendererProps) => {
     animate()
 
     return () => {
-      mountRef.current.removeChild(renderer.domElement)
+      mountRef.current!.removeChild(renderer.domElement)
     }
   }, [item])
 

@@ -32,7 +32,7 @@ export default function Home() {
   // Function to add a new item
   const addItem = () => {
     const newItem: Item = {
-      name: `Item ${items.length + 1}`,
+      name: `Płyta ${items.length + 1}`,
       width: 80,
       height: 120,
       depth: 2,
@@ -69,7 +69,7 @@ export default function Home() {
             <meta name='description' content='Welcome to my Next.js app' />
           </Head>
 
-          <Header appName='App name' />
+          <Header appName='Zamawianie Cięcia' />
 
           <main className='flex flex-wrap h-screen'>
             <div className='w-2/5 h-screen'>
