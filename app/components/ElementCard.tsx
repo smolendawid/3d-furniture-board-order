@@ -130,19 +130,28 @@ const ElementCard: React.FC<
         </div>
       </div>
       <div className='grid grid-cols-4 gap-4 p-4'>
-        {['veneerA', 'veneerB', 'veneerC', 'veneerD'].map((veneerField) => (
-          <div key={veneerField} className='flex items-center'>
-            <select
-              className='border rounded w-full p-2'
-              value={editableItem[veneerField]}
-              onChange={handleChange}
-              name={veneerField}
-            >
-              <option value='true'>Okleina</option>
-              <option value='false'>Bez okleiny</option>
-            </select>
-          </div>
-        ))}
+        {['veneerA', 'veneerB', 'veneerC', 'veneerD'].map(
+          (veneerField, index) => (
+            <div key={veneerField} className='flex items-center'>
+              <label className='mr-2'>{`Okleina ${index + 1}`}</label>
+              <input
+                type='checkbox'
+                checked={editableItem[veneerField] === true} // Direct comparison to boolean true
+                onChange={(e) => {
+                  // Adapt the event to fit handleChange's expectations
+                  handleChange({
+                    target: {
+                      name: veneerField,
+                      value: e.target.checked ? 'true' : 'false', // Convert boolean to string
+                      type: 'checkbox', // Indicate the type of input (optional, depending on your further use cases)
+                    },
+                  } as React.ChangeEvent<HTMLInputElement>) // Type casting to match expected type
+                }}
+                name={veneerField}
+              />
+            </div>
+          )
+        )}
       </div>
     </div>
   )
