@@ -1,34 +1,25 @@
 import React, { useState, useEffect } from 'react'
-import { Item, Material } from '../models/Item'
+import { Cut, Material } from '../models/Cut'
 import { materials } from './materialImages' // Update this path accordingly
 
-interface ElementCardProps {
-  item: Item
-  updateItem: (index: number, changes: Partial<Item>) => void
-  index: number
-  materials: Material[] // Updated to use MaterialType array
+interface CutCardProps {
+  cut: Cut
+  updateCut: (index: number, changes: Partial<Cut>) => void
+  cardIndex: number
+  boardIndex: number
 }
 
-interface ElementCardProps {
-  item: Item
-  updateItem: (index: number, changes: Partial<Item>) => void
-  index: number
-}
-
-const ElementCard: React.FC<
-  ElementCardProps & {
+const CutCard: React.FC<
+  CutCardProps & {
     isSelected: boolean
-    onCardClick: (index: number) => void
+    onCutClick: (boardIndex: number, cutIndex: number) => void
   }
-> = ({ item, updateItem, index, isSelected, onCardClick }) => {
-  const [editableItem, setEditableItem] = useState<Item>(item)
-  const [selectedMaterialImage, setSelectedMaterialImage] = useState<string>('')
+> = ({ cut, updateCut, cardIndex, boardIndex, isSelected, onCutClick }) => {
+  const [editableCut, setEditableCut] = useState<Cut>(cut)
 
   useEffect(() => {
-    setEditableItem(item)
-    // Update the selected material image based on the initial item.material.imageURL
-    setSelectedMaterialImage(item.material.imageURL)
-  }, [item])
+    setEditableCut(cut)
+  }, [cut])
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -49,23 +40,14 @@ const ElementCard: React.FC<
       updatedValue = parseInt(value)
     }
 
-    let updatedItem = { ...editableItem, [name]: updatedValue }
+    let updatedCut = { ...editableCut, [name]: updatedValue }
 
-    if (name === 'material') {
-      // Find the material object by name and update
-      const material = materials.find((material) => material.name === value)
-      if (material) {
-        updatedItem.material = material
-        setSelectedMaterialImage(material.imageURL)
-      }
-    }
-
-    setEditableItem(updatedItem)
-    updateItem(index, updatedItem)
+    setEditableCut(updatedCut)
+    updateCut(boardIndex, cardIndex, updatedCut)
   }
 
   const handleClick = () => {
-    onCardClick(index)
+    onCutClick(boardIndex, cardIndex)
   }
 
   const selectionClass = isSelected ? 'border-4 border-blue-500' : ''
@@ -79,7 +61,7 @@ const ElementCard: React.FC<
         className='block border rounded w-full p-2 mb-4'
         type='text'
         placeholder='name'
-        value={editableItem.name}
+        value={editableCut.name}
         onChange={handleChange}
         name='name'
       />
@@ -88,7 +70,7 @@ const ElementCard: React.FC<
           className='border rounded w-full p-2'
           type='number'
           placeholder='width'
-          value={editableItem.width}
+          value={editableCut.width}
           onChange={handleChange}
           name='width'
         />
@@ -96,7 +78,7 @@ const ElementCard: React.FC<
           className='border rounded w-full p-2'
           type='number'
           placeholder='height'
-          value={editableItem.height}
+          value={editableCut.height}
           onChange={handleChange}
           name='height'
         />
@@ -104,30 +86,10 @@ const ElementCard: React.FC<
           className='border rounded w-full p-2'
           type='number'
           placeholder='quantity'
-          value={editableItem.quantity}
+          value={editableCut.quantity}
           onChange={handleChange}
           name='quantity'
         />
-
-        <div className='flex items-center'>
-          <select
-            className='border rounded w-full p-2'
-            value={editableItem.material.name}
-            onChange={handleChange}
-            name='material'
-          >
-            {materials.map((material, index) => (
-              <option key={index} value={material.name}>
-                {material.name}
-              </option>
-            ))}
-          </select>
-          <img
-            className='p-2'
-            src={selectedMaterialImage}
-            style={{ width: '48px', height: '48px', paddingLeft: '8px' }}
-          />
-        </div>
       </div>
       <div className='grid grid-cols-4 gap-4 p-4'>
         {['veneerA', 'veneerB', 'veneerC', 'veneerD'].map(
@@ -136,7 +98,7 @@ const ElementCard: React.FC<
               <label className='mr-2'>{`Okleina ${index + 1}`}</label>
               <input
                 type='checkbox'
-                checked={editableItem[veneerField] === true} // Direct comparison to boolean true
+                checked={editableCut[veneerField] === true} // Direct comparison to boolean true
                 onChange={(e) => {
                   // Adapt the event to fit handleChange's expectations
                   handleChange({
@@ -157,4 +119,4 @@ const ElementCard: React.FC<
   )
 }
 
-export default ElementCard
+export default CutCard

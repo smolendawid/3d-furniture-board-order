@@ -2,64 +2,86 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-
 import Head from 'next/head'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import Loading from './components/Loading'
 import ControlPanel from './components/ControlPanel'
 import Renderer from './components/Renderer'
-import { Item } from './models/Item'
+import { Cut } from './models/Cut'
+import { Board } from './models/Board'
 import { materials } from './components/materialImages'
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true)
-  const [items, setItems] = useState<Item[]>([])
-  const [selectedCardIndex, setSelectedCardIndex] = useState<number>(0)
-
-  const handleCardClick = (index: number) => {
-    setSelectedCardIndex(index)
-  }
+  const [boards, setBoards] = useState<Board[]>([])
+  const [selectedBoardIndex, setSelectedBoardIndex] = useState<number>(0)
+  const [selectedCutIndex, setSelectedCutIndex] = useState<number>(0)
 
   useEffect(() => {
+    console.log(boards)
     const timer = setTimeout(() => {
       setIsLoading(false)
     }, 500) // Change the delay as needed
-
     return () => clearTimeout(timer)
-  }, [])
+  }, [boards])
 
-  // Function to add a new item
-  const addItem = () => {
-    const newItem: Item = {
-      name: `Płyta ${items.length + 1}`,
+  const handleBoardClick = (index: number) => {
+    setSelectedBoardIndex(index)
+  }
+
+  const handleCutClick = (boardIndex: number, cutIndex: number) => {
+    setSelectedBoardIndex(boardIndex)
+    setSelectedCutIndex(cutIndex)
+  }
+
+  const addCut = (index: number) => {
+    const newCut: Cut = {
+      name: `Cięcie ${1}`,
       width: 80,
       height: 120,
       depth: 2,
       quantity: 1,
-      material: materials[0],
       veneerA: false,
       veneerB: false,
       veneerC: false,
       veneerD: false,
     }
-    setItems([...items, newItem])
+
+    const updatedBoards = [...boards]
+    if (updatedBoards[index]) {
+      updatedBoards[index].cuts.push(newCut)
+      setBoards(updatedBoards)
+    }
   }
-  const updateItem = (index: number, changes: Partial<Item>) => {
-    // Clone the current items to not mutate the original state directly
-    const updatedItems = [...items]
 
-    // Check if the item exists at the given index
-    if (updatedItems[index]) {
-      // Apply the changes to the item at the given index
-      updatedItems[index] = { ...updatedItems[index], ...changes }
+  const addBoard = () => {
+    const newBoard: Board = {
+      material: materials[0],
+      cuts: [],
+    }
+    setBoards([...boards, newBoard])
+  }
 
-      // Update the state with the modified items array
-      setItems(updatedItems)
+  const updateCut = (changes: Partial<Cut>) => {
+    // Clone the current cuts to not mutate the original state directly
+    const updatedBoards = [...boards]
+
+    // Check if the cut exists at the given index
+    if (updatedBoards[selectedBoardIndex]) {
+      // Apply the changes to the cut at the given index
+      updatedBoards[selectedCutIndex] = {
+        ...updatedBoards[selectedBoardIndex][selectedCutIndex],
+        ...changes,
+      }
+
+      // Update the state with the modified cuts array
+      setBoards(updatedBoards)
     } else {
       console.error('Item not found at the given index')
     }
   }
+
   return (
     <>
       <Loading isLoading={isLoading} />
@@ -75,17 +97,24 @@ export default function Home() {
           <main className='flex flex-wrap md:h-screen'>
             <div className='w-full md:w-2/5 md:h-screen'>
               <ControlPanel
-                addItem={addItem}
-                updateItem={updateItem}
-                items={items}
-                selectedCardIndex={selectedCardIndex}
-                handleCardClick={handleCardClick}
+                addCut={addCut}
+                addBoard={addBoard}
+                updateCut={updateCut}
+                boards={boards}
+                selectedBoardIndex={selectedBoardIndex}
+                selectedCutIndex={selectedCutIndex}
+                handleBoardClick={handleBoardClick}
+                handleCutClick={handleCutClick}
               />
             </div>
             <div className='w-full md:w-3/5 md:h-screen bg-custom-background'>
-              {items.length !== 0 && (
-                <Renderer item={items[selectedCardIndex]} />
-              )}
+              {boards[selectedBoardIndex] &&
+                boards[selectedBoardIndex].cuts.length !== 0 && (
+                  <Renderer
+                    cuts={boards[selectedBoardIndex].cuts}
+                    material={boards[selectedBoardIndex].material}
+                  />
+                )}
             </div>
           </main>
         </div>
