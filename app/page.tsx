@@ -19,16 +19,11 @@ export default function Home() {
   const [selectedCutIndex, setSelectedCutIndex] = useState<number>(0)
 
   useEffect(() => {
-    console.log(boards)
     const timer = setTimeout(() => {
       setIsLoading(false)
     }, 500) // Change the delay as needed
     return () => clearTimeout(timer)
   }, [boards])
-
-  const handleBoardClick = (index: number) => {
-    setSelectedBoardIndex(index)
-  }
 
   const handleCutClick = (boardIndex: number, cutIndex: number) => {
     setSelectedBoardIndex(boardIndex)
@@ -63,22 +58,21 @@ export default function Home() {
     setBoards([...boards, newBoard])
   }
 
-  const updateCut = (changes: Partial<Cut>) => {
-    // Clone the current cuts to not mutate the original state directly
-    const updatedBoards = [...boards]
-
+  const updateCut = (boardIndex: number, cutIndex: number, changes: Partial<Cut>) => {
+    const updatedBoards = [...boards];
+    const updatedCuts = [...updatedBoards[boardIndex].cuts];
+  
     // Check if the cut exists at the given index
-    if (updatedBoards[selectedBoardIndex]) {
-      // Apply the changes to the cut at the given index
-      updatedBoards[selectedCutIndex] = {
-        ...updatedBoards[selectedBoardIndex][selectedCutIndex],
+    if (updatedCuts[cutIndex]) {
+      updatedCuts[cutIndex] = {
+        ...updatedCuts[cutIndex],
         ...changes,
-      }
-
-      // Update the state with the modified cuts array
-      setBoards(updatedBoards)
+      };
+  
+      updatedBoards[boardIndex].cuts = updatedCuts;
+      setBoards(updatedBoards);
     } else {
-      console.error('Item not found at the given index')
+      console.error('Item not found at the given index');
     }
   }
 
@@ -86,7 +80,7 @@ export default function Home() {
     <>
       <Loading isLoading={isLoading} />
       {!isLoading && (
-        <div>
+        <div className='bg-custom-background'>
           <Head>
             <title>My Next.js App</title>
             <meta name='description' content='Welcome to my Next.js app' />
@@ -94,8 +88,8 @@ export default function Home() {
 
           <Header appName='Zamawianie Cięcia' />
 
-          <main className='flex flex-wrap md:h-screen'>
-            <div className='w-full md:w-2/5 md:h-screen'>
+          <main className='flex flex-wrap md:h-screen)]'>
+            <div className='w-full md:w-1/2 md:min-h-screen overflow-auto bg-custom-background'>
               <ControlPanel
                 addCut={addCut}
                 addBoard={addBoard}
@@ -103,18 +97,17 @@ export default function Home() {
                 boards={boards}
                 selectedBoardIndex={selectedBoardIndex}
                 selectedCutIndex={selectedCutIndex}
-                handleBoardClick={handleBoardClick}
                 handleCutClick={handleCutClick}
               />
             </div>
-            <div className='w-full md:w-3/5 md:h-screen bg-custom-background'>
+            <div className='w-full md:w-1/2 md:h-100vh fixed right-0 bg-custom-background'>
               {boards[selectedBoardIndex] &&
                 boards[selectedBoardIndex].cuts.length !== 0 && (
                   <Renderer
-                    cuts={boards[selectedBoardIndex].cuts}
+                    cut={boards[selectedBoardIndex].cuts[selectedCutIndex]}
                     material={boards[selectedBoardIndex].material}
                   />
-                )}
+              )}
             </div>
           </main>
         </div>

@@ -6,14 +6,15 @@ import { Cut } from '../models/Cut'
 import { Board } from '../models/Board'
 import React from 'react'
 import { materials } from './materialImages' // Update this path accordingly
-import { downloadCutsAsCsv } from './csvUtils'
+import { downloadBoardsAsCsv } from './csvUtils'
 
 interface Props {
   addCut: (index: number) => void
   addBoard: () => void
-  updateCut: (index: number, changes: Partial<Cut>) => void
+  updateCut: (boardIntex: number, cardIndex: number, changes: Partial<Cut>) => void
   boards: Board[]
   selectedCutIndex: number | null
+  selectedBoardIndex: number | null
   handleCutClick: (boardIndex: number, cutIndex: number) => void
 }
 
@@ -23,6 +24,7 @@ const ControlPanel: React.FC<Props> = ({
   updateCut,
   boards,
   selectedCutIndex,
+  selectedBoardIndex,
   handleCutClick,
 }) => {
   return (
@@ -36,6 +38,7 @@ const ControlPanel: React.FC<Props> = ({
                 addCut={addCut}
                 updateCut={updateCut}
                 selectedCutIndex={selectedCutIndex}
+                selectedBoardIndex={selectedBoardIndex}
                 handleCutClick={handleCutClick}
                 boardIndex={boardIndex}
               />
@@ -53,7 +56,7 @@ const ControlPanel: React.FC<Props> = ({
         <div className='flex justify-center items-center p-4'>
           <button
             className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
-            onClick={() => downloadCutsAsCsv(boards)}
+            onClick={() => downloadBoardsAsCsv(boards)}
           >
             Wyślij zamówienie
           </button>

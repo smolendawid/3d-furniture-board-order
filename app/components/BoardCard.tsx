@@ -6,9 +6,10 @@ import { Board } from '../models/Board'
 
 interface Props {
   addCut: (boardIndex: number) => void
-  updateCut: (index: number, changes: Partial<Cut>) => void
+  updateCut: (boardIntex: number, cardIndex: number, changes: Partial<Cut>) => void
   board: Board
   selectedCutIndex: number | null
+  selectedBoardIndex:  number | null
   handleCutClick: (boardIndex: number, cardIndex: number) => void
   boardIndex: number
 }
@@ -18,6 +19,7 @@ const BoardCard: React.FC<Props> = ({
   updateCut,
   board,
   selectedCutIndex,
+  selectedBoardIndex,
   handleCutClick,
   boardIndex,
 }) => {
@@ -33,13 +35,11 @@ const BoardCard: React.FC<Props> = ({
       if (material) {
         setSelectedMaterialImage(material.imageURL)
       }
-      // }
     }
-
-    useEffect(() => {
-      setSelectedMaterialImage(materials[0].imageURL)
-    }, [board])
   }
+  useEffect(() => {
+    setSelectedMaterialImage(board.material.imageURL)
+  }, [board])
 
   return (
     <div className={`bg-white rounded p-4 w-9/10 max-w-4xl mx-auto text-black`}>
@@ -63,14 +63,14 @@ const BoardCard: React.FC<Props> = ({
         />
       </div>
       <ul>
-        {board.cuts.map((cut, cardIndex) => (
+        {board.cuts!.map((cut, cardIndex) => (
           <li key={cardIndex} className='mt-2'>
             <CutCard
               cut={cut}
               updateCut={updateCut}
               cardIndex={cardIndex}
               boardIndex={boardIndex}
-              isSelected={selectedCutIndex === cardIndex}
+              isSelected={(selectedCutIndex === cardIndex) && (selectedBoardIndex === boardIndex)}
               onCutClick={handleCutClick}
             ></CutCard>
           </li>
@@ -84,7 +84,6 @@ const BoardCard: React.FC<Props> = ({
           Dodaj Cięcie
         </button>
       </div>
-      board
     </div>
   )
 }

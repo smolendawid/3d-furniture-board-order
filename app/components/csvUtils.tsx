@@ -13,16 +13,17 @@ export function downloadCsv(csvContent: string, fileName: string): void {
   document.body.removeChild(link)
 }
 
-// Function to generate CSV content from cuts and initiate download
-export function downloadCutsAsCsv(cuts: Board[]): void {
-  const headers =
-    'Name,Width,Height,Depth,Material Name,Material ImageURL,Quantity,Veneer A,Veneer B,Veneer C,Veneer D\n'
-  const csvRows = cuts
-    .map(
-      (cut) =>
-        `${cut.name},${cut.width},${cut.height},${cut.depth},"${cut.material.name}","${cut.material.imageURL}",${cut.quantity},${cut.veneerA},${cut.veneerB},${cut.veneerC},${cut.veneerD}`
+export function downloadBoardsAsCsv(boards: Board[]): void {
+  const headers = 
+    'Name,Width,Height,Depth,Material Name,Material ImageURL,Quantity,Veneer A,Veneer B,Veneer C,Veneer D\n';
+  
+    console.log(boards)
+  const csvRows = boards.flatMap(board =>
+    board.cuts.map(cut => 
+      `${cut.name},${cut.width},${cut.height},${cut.depth},"${board.material.name}","${board.material.imageURL}",${cut.quantity},${cut.veneerA},${cut.veneerB},${cut.veneerC},${cut.veneerD}`
     )
-    .join('\n')
-  const csvContent = headers + csvRows
-  downloadCsv(csvContent, 'cuts.csv')
+  ).join('\n');
+
+  const csvContent = headers + csvRows;
+  downloadCsv(csvContent, 'boards.csv');
 }

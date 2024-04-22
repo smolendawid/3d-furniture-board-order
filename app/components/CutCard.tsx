@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { Cut, Material } from '../models/Cut'
-import { materials } from './materialImages' // Update this path accordingly
+import { Cut } from '../models/Cut'
+import FancyInput from './FancyInput'
+
 
 interface CutCardProps {
   cut: Cut
-  updateCut: (index: number, changes: Partial<Cut>) => void
+  updateCut: (boardIntex: number, cardIndex: number, changes: Partial<Cut>) => void
   cardIndex: number
   boardIndex: number
 }
@@ -41,55 +42,28 @@ const CutCard: React.FC<
     }
 
     let updatedCut = { ...editableCut, [name]: updatedValue }
-
     setEditableCut(updatedCut)
     updateCut(boardIndex, cardIndex, updatedCut)
   }
 
   const handleClick = () => {
     onCutClick(boardIndex, cardIndex)
+    console.log(cut)
   }
 
-  const selectionClass = isSelected ? 'border-4 border-blue-500' : ''
+  const selectionClass = isSelected ? 'border-2 border-blue-500' : ''
 
   return (
     <div
-      className={`bg-white rounded p-4 w-9/10 max-w-4xl mx-auto text-black ${selectionClass}`}
+      className={`bg-white rounded p-4 w-9/10 max-w-4xl mx-auto text-black ${selectionClass} shadow-lg` }
       onClick={handleClick}
     >
-      <input
-        className='block border rounded w-full p-2 mb-4'
-        type='text'
-        placeholder='name'
-        value={editableCut.name}
-        onChange={handleChange}
-        name='name'
-      />
-      <div className='grid grid-cols-4 gap-4'>
-        <input
-          className='border rounded w-full p-2'
-          type='number'
-          placeholder='width'
-          value={editableCut.width}
-          onChange={handleChange}
-          name='width'
-        />
-        <input
-          className='border rounded w-full p-2'
-          type='number'
-          placeholder='height'
-          value={editableCut.height}
-          onChange={handleChange}
-          name='height'
-        />
-        <input
-          className='border rounded w-full p-2'
-          type='number'
-          placeholder='quantity'
-          value={editableCut.quantity}
-          onChange={handleChange}
-          name='quantity'
-        />
+      <FancyInput label="Nazwa płyty" size="medium" value={editableCut.name} onChange={handleChange} name="name"/>
+
+      <div className='grid grid-cols-3 gap-4 my-4'>
+        <FancyInput label="Szerokość" size="medium" value={editableCut.width} onChange={handleChange} type="number" name="width"/>
+        <FancyInput label="Wysokość" size="medium" value={editableCut.height} onChange={handleChange} type="number" name="height"/>
+        <FancyInput label="Liczba formatek" size="medium" value={editableCut.quantity} onChange={handleChange} type="number" name="quantity"/>
       </div>
       <div className='grid grid-cols-4 gap-4 p-4'>
         {['veneerA', 'veneerB', 'veneerC', 'veneerD'].map(

@@ -10,11 +10,11 @@ interface RendererProps {
   material: Material
 }
 
-const Renderer = ({ cut }: RendererProps) => {
+
+const Renderer = ({ cut, material }: RendererProps) => {
   const mountRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    console.log(cut)
     const {
       width,
       height,
@@ -45,7 +45,7 @@ const Renderer = ({ cut }: RendererProps) => {
 
     const loader = new THREE.TextureLoader()
     loader.load(
-      materials[0].imageURL,
+      material.imageURL,
       (texture) => {
         const colorMaterial = new THREE.MeshBasicMaterial({ color: '#8AC' })
         const materials = [
@@ -82,9 +82,9 @@ const Renderer = ({ cut }: RendererProps) => {
 
     const maxDimension = Math.max(width, height, totalDepth)
     camera.position.set(
-      maxDimension * 1.5,
-      maxDimension * 1.5,
-      maxDimension * 1.5
+      maxDimension * 0,
+      maxDimension * 0,
+      maxDimension * 3
     )
     camera.lookAt(scene.position)
 
@@ -112,7 +112,7 @@ const Renderer = ({ cut }: RendererProps) => {
     return () => {
       mountRef.current!.removeChild(renderer.domElement)
     }
-  }, [cut]) // You might want to adjust this dependency array based on your needs
+  }, [cut, material])
 
   return (
     <section
