@@ -1,4 +1,4 @@
-import { Material } from '../models/Cut'
+import { Material } from '../models/Board'
 const basePath =
   process.env.NODE_ENV === 'production' ? '/3d-furniture-board-order' : ''
 

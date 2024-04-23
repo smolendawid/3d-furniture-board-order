@@ -63,7 +63,7 @@ const CutCard: React.FC<
     >
       <FancyInput
         label='Nazwa płyty'
-        size='medium'
+        inputSize='medium'
         value={editableCut.name}
         onChange={handleChange}
         name='name'
@@ -72,7 +72,7 @@ const CutCard: React.FC<
       <div className='grid grid-cols-3 gap-4 my-4'>
         <FancyInput
           label='Szerokość'
-          size='medium'
+          inputSize='medium'
           value={editableCut.width}
           onChange={handleChange}
           type='number'
@@ -80,7 +80,7 @@ const CutCard: React.FC<
         />
         <FancyInput
           label='Wysokość'
-          size='medium'
+          inputSize='medium'
           value={editableCut.height}
           onChange={handleChange}
           type='number'
@@ -88,7 +88,7 @@ const CutCard: React.FC<
         />
         <FancyInput
           label='Liczba formatek'
-          size='medium'
+          inputSize='medium'
           value={editableCut.quantity}
           onChange={handleChange}
           type='number'

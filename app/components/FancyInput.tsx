@@ -3,7 +3,7 @@ import React, { InputHTMLAttributes } from 'react'
 // Define a type for the props specific to FancyInput
 interface FancyInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string
-  size?: 'medium' | 'large'
+  inputSize?: 'medium' | 'large'
 }
 
 // Define possible size classes for the input
@@ -14,14 +14,14 @@ const inputSizes = {
 
 const FancyInput: React.FC<FancyInputProps> = ({
   label,
-  size = 'medium',
+  inputSize = 'medium',
   type = 'text',
   name,
   value,
   onChange,
   ...props
 }) => {
-  const sizeClasses = inputSizes[size] || inputSizes.medium
+  const sizeClasses = inputSizes[inputSize] || inputSizes.medium
 
   return (
     <div className={`flex flex-col items-end gap-6 w-42`}>

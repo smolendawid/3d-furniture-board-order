@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react'
-import { Cut, Material } from '../models/Cut'
-import { materials } from './materialImages' // Update this path accordingly
+import React from 'react'
+import { Cut } from '../models/Cut'
+import { materials } from './materialImages'
 import CutCard from './CutCard'
 import { Board } from '../models/Board'
+import { Material } from '../models/Board'
 
 interface Props {
   addCut: (boardIndex: number) => void

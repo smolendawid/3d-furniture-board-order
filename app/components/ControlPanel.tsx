@@ -1,11 +1,9 @@
 'use client'
 
-import CutCard from './CutCard'
 import BoardCard from './BoardCard'
 import { Cut } from '../models/Cut'
 import { Board, Material } from '../models/Board'
 import React from 'react'
-import { materials } from './materialImages' // Update this path accordingly
 import { downloadBoardsAsCsv } from './csvUtils'
 
 interface Props {

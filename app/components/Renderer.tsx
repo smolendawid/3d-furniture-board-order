@@ -2,7 +2,6 @@ import React, { useRef, useEffect } from 'react'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { Cut } from '../models/Cut'
-import { materials } from './materialImages' // Update this path accordingly
 import { Material } from '../models/Board'
 
 interface RendererProps {
