@@ -1,4 +1,6 @@
-import { Item } from '../models/Item'
+import { Board } from '../models/Board'
+import { Cut } from '../models/Cut'
+
 // Utility function to download data as a CSV file
 export function downloadCsv(csvContent: string, fileName: string): void {
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
@@ -11,16 +13,20 @@ export function downloadCsv(csvContent: string, fileName: string): void {
   document.body.removeChild(link)
 }
 
-// Function to generate CSV content from items and initiate download
-export function downloadItemsAsCsv(items: Item[]): void {
+export function downloadBoardsAsCsv(boards: Board[]): void {
   const headers =
     'Name,Width,Height,Depth,Material Name,Material ImageURL,Quantity,Veneer A,Veneer B,Veneer C,Veneer D\n'
-  const csvRows = items
-    .map(
-      (item) =>
-        `${item.name},${item.width},${item.height},${item.depth},"${item.material.name}","${item.material.imageURL}",${item.quantity},${item.veneerA},${item.veneerB},${item.veneerC},${item.veneerD}`
+
+  console.log(boards)
+  const csvRows = boards
+    .flatMap((board) =>
+      board.cuts.map(
+        (cut) =>
+          `${cut.name},${cut.width},${cut.height},${cut.depth},"${board.material.name}","${board.material.imageURL}",${cut.quantity},${cut.veneerA},${cut.veneerB},${cut.veneerC},${cut.veneerD}`
+      )
     )
     .join('\n')
+
   const csvContent = headers + csvRows
-  downloadCsv(csvContent, 'items.csv')
+  downloadCsv(csvContent, 'boards.csv')
 }

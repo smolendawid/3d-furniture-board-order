@@ -1,13 +1,15 @@
 import React, { useRef, useEffect } from 'react'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import { Item } from '../models/Item'
+import { Cut } from '../models/Cut'
+import { Material } from '../models/Board'
 
 interface RendererProps {
-  item: Item
+  cut: Cut
+  material: Material
 }
 
-const Renderer = ({ item }: RendererProps) => {
+const Renderer = ({ cut, material }: RendererProps) => {
   const mountRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -15,13 +17,12 @@ const Renderer = ({ item }: RendererProps) => {
       width,
       height,
       depth,
-      material,
       veneerA,
       veneerB,
       veneerC,
       veneerD,
       quantity,
-    } = item
+    } = cut
 
     // Calculate the total length needed to fit all cuboids with gaps
     const gap = 10 * depth // Set gap size to 20% of the depth
@@ -78,11 +79,7 @@ const Renderer = ({ item }: RendererProps) => {
     )
 
     const maxDimension = Math.max(width, height, totalDepth)
-    camera.position.set(
-      maxDimension * 1.5,
-      maxDimension * 1.5,
-      maxDimension * 1.5
-    )
+    camera.position.set(maxDimension * 0, maxDimension * 0, maxDimension * 3)
     camera.lookAt(scene.position)
 
     const controls = new OrbitControls(camera, renderer.domElement)
@@ -109,7 +106,7 @@ const Renderer = ({ item }: RendererProps) => {
     return () => {
       mountRef.current!.removeChild(renderer.domElement)
     }
-  }, [item]) // You might want to adjust this dependency array based on your needs
+  }, [cut, material])
 
   return (
     <section
