@@ -10,7 +10,6 @@ interface RendererProps {
   material: Material
 }
 
-
 const Renderer = ({ cut, material }: RendererProps) => {
   const mountRef = useRef<HTMLDivElement>(null)
 
@@ -81,11 +80,7 @@ const Renderer = ({ cut, material }: RendererProps) => {
     )
 
     const maxDimension = Math.max(width, height, totalDepth)
-    camera.position.set(
-      maxDimension * 0,
-      maxDimension * 0,
-      maxDimension * 3
-    )
+    camera.position.set(maxDimension * 0, maxDimension * 0, maxDimension * 3)
     camera.lookAt(scene.position)
 
     const controls = new OrbitControls(camera, renderer.domElement)

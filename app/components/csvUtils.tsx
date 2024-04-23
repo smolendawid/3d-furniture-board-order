@@ -14,16 +14,19 @@ export function downloadCsv(csvContent: string, fileName: string): void {
 }
 
 export function downloadBoardsAsCsv(boards: Board[]): void {
-  const headers = 
-    'Name,Width,Height,Depth,Material Name,Material ImageURL,Quantity,Veneer A,Veneer B,Veneer C,Veneer D\n';
-  
-    console.log(boards)
-  const csvRows = boards.flatMap(board =>
-    board.cuts.map(cut => 
-      `${cut.name},${cut.width},${cut.height},${cut.depth},"${board.material.name}","${board.material.imageURL}",${cut.quantity},${cut.veneerA},${cut.veneerB},${cut.veneerC},${cut.veneerD}`
-    )
-  ).join('\n');
+  const headers =
+    'Name,Width,Height,Depth,Material Name,Material ImageURL,Quantity,Veneer A,Veneer B,Veneer C,Veneer D\n'
 
-  const csvContent = headers + csvRows;
-  downloadCsv(csvContent, 'boards.csv');
+  console.log(boards)
+  const csvRows = boards
+    .flatMap((board) =>
+      board.cuts.map(
+        (cut) =>
+          `${cut.name},${cut.width},${cut.height},${cut.depth},"${board.material.name}","${board.material.imageURL}",${cut.quantity},${cut.veneerA},${cut.veneerB},${cut.veneerC},${cut.veneerD}`
+      )
+    )
+    .join('\n')
+
+  const csvContent = headers + csvRows
+  downloadCsv(csvContent, 'boards.csv')
 }

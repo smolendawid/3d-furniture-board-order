@@ -11,19 +11,23 @@ import Renderer from './components/Renderer'
 import { Cut } from './models/Cut'
 import { Board } from './models/Board'
 import { materials } from './components/materialImages'
+import { Material } from './models/Board'
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true)
   const [boards, setBoards] = useState<Board[]>([])
   const [selectedBoardIndex, setSelectedBoardIndex] = useState<number>(0)
   const [selectedCutIndex, setSelectedCutIndex] = useState<number>(0)
+  const [selectedMaterial, setSelectedMaterial] = useState<Material>(
+    materials[0]
+  )
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false)
     }, 500) // Change the delay as needed
     return () => clearTimeout(timer)
-  }, [boards])
+  }, [boards, setSelectedMaterial])
 
   const handleCutClick = (boardIndex: number, cutIndex: number) => {
     setSelectedBoardIndex(boardIndex)
@@ -50,6 +54,18 @@ export default function Home() {
     }
   }
 
+  const handleMaterialChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target
+    if (name === 'material') {
+      const material = materials.find((material) => material.name === value)
+      if (material) {
+        setSelectedMaterial(material)
+      }
+    }
+  }
+
   const addBoard = () => {
     const newBoard: Board = {
       material: materials[0],
@@ -58,21 +74,25 @@ export default function Home() {
     setBoards([...boards, newBoard])
   }
 
-  const updateCut = (boardIndex: number, cutIndex: number, changes: Partial<Cut>) => {
-    const updatedBoards = [...boards];
-    const updatedCuts = [...updatedBoards[boardIndex].cuts];
-  
+  const updateCut = (
+    boardIndex: number,
+    cutIndex: number,
+    changes: Partial<Cut>
+  ) => {
+    const updatedBoards = [...boards]
+    const updatedCuts = [...updatedBoards[boardIndex].cuts]
+
     // Check if the cut exists at the given index
     if (updatedCuts[cutIndex]) {
       updatedCuts[cutIndex] = {
         ...updatedCuts[cutIndex],
         ...changes,
-      };
-  
-      updatedBoards[boardIndex].cuts = updatedCuts;
-      setBoards(updatedBoards);
+      }
+
+      updatedBoards[boardIndex].cuts = updatedCuts
+      setBoards(updatedBoards)
     } else {
-      console.error('Item not found at the given index');
+      console.error('Item not found at the given index')
     }
   }
 
@@ -98,6 +118,8 @@ export default function Home() {
                 selectedBoardIndex={selectedBoardIndex}
                 selectedCutIndex={selectedCutIndex}
                 handleCutClick={handleCutClick}
+                handleMaterialChange={handleMaterialChange}
+                selectedMaterial={selectedMaterial}
               />
             </div>
             <div className='w-full md:w-1/2 md:h-100vh fixed right-0 bg-custom-background'>
@@ -105,9 +127,9 @@ export default function Home() {
                 boards[selectedBoardIndex].cuts.length !== 0 && (
                   <Renderer
                     cut={boards[selectedBoardIndex].cuts[selectedCutIndex]}
-                    material={boards[selectedBoardIndex].material}
+                    material={selectedMaterial}
                   />
-              )}
+                )}
             </div>
           </main>
         </div>

@@ -2,10 +2,13 @@ import React, { useState, useEffect } from 'react'
 import { Cut } from '../models/Cut'
 import FancyInput from './FancyInput'
 
-
 interface CutCardProps {
   cut: Cut
-  updateCut: (boardIntex: number, cardIndex: number, changes: Partial<Cut>) => void
+  updateCut: (
+    boardIntex: number,
+    cardIndex: number,
+    changes: Partial<Cut>
+  ) => void
   cardIndex: number
   boardIndex: number
 }
@@ -55,15 +58,42 @@ const CutCard: React.FC<
 
   return (
     <div
-      className={`bg-white rounded p-4 w-9/10 max-w-4xl mx-auto text-black ${selectionClass} shadow-lg` }
+      className={`bg-white rounded p-4 w-9/10 max-w-4xl mx-auto text-black ${selectionClass} shadow-lg`}
       onClick={handleClick}
     >
-      <FancyInput label="Nazwa płyty" size="medium" value={editableCut.name} onChange={handleChange} name="name"/>
+      <FancyInput
+        label='Nazwa płyty'
+        size='medium'
+        value={editableCut.name}
+        onChange={handleChange}
+        name='name'
+      />
 
       <div className='grid grid-cols-3 gap-4 my-4'>
-        <FancyInput label="Szerokość" size="medium" value={editableCut.width} onChange={handleChange} type="number" name="width"/>
-        <FancyInput label="Wysokość" size="medium" value={editableCut.height} onChange={handleChange} type="number" name="height"/>
-        <FancyInput label="Liczba formatek" size="medium" value={editableCut.quantity} onChange={handleChange} type="number" name="quantity"/>
+        <FancyInput
+          label='Szerokość'
+          size='medium'
+          value={editableCut.width}
+          onChange={handleChange}
+          type='number'
+          name='width'
+        />
+        <FancyInput
+          label='Wysokość'
+          size='medium'
+          value={editableCut.height}
+          onChange={handleChange}
+          type='number'
+          name='height'
+        />
+        <FancyInput
+          label='Liczba formatek'
+          size='medium'
+          value={editableCut.quantity}
+          onChange={handleChange}
+          type='number'
+          name='quantity'
+        />
       </div>
       <div className='grid grid-cols-4 gap-4 p-4'>
         {['veneerA', 'veneerB', 'veneerC', 'veneerD'].map(

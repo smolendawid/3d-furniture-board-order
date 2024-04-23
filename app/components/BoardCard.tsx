@@ -6,12 +6,20 @@ import { Board } from '../models/Board'
 
 interface Props {
   addCut: (boardIndex: number) => void
-  updateCut: (boardIntex: number, cardIndex: number, changes: Partial<Cut>) => void
+  updateCut: (
+    boardIntex: number,
+    cardIndex: number,
+    changes: Partial<Cut>
+  ) => void
   board: Board
   selectedCutIndex: number | null
-  selectedBoardIndex:  number | null
+  selectedBoardIndex: number | null
   handleCutClick: (boardIndex: number, cardIndex: number) => void
   boardIndex: number
+  handleMaterialChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => void
+  selectedMaterial: Material
 }
 
 const BoardCard: React.FC<Props> = ({
@@ -22,32 +30,16 @@ const BoardCard: React.FC<Props> = ({
   selectedBoardIndex,
   handleCutClick,
   boardIndex,
+  handleMaterialChange,
+  selectedMaterial,
 }) => {
-  //   const [editableCut, setEditableCut] = useState<Cut>(cut)
-  const [selectedMaterialImage, setSelectedMaterialImage] = useState<string>('')
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target
-    if (name === 'material') {
-      const material = materials.find((material) => material.name === value)
-      if (material) {
-        setSelectedMaterialImage(material.imageURL)
-      }
-    }
-  }
-  useEffect(() => {
-    setSelectedMaterialImage(board.material.imageURL)
-  }, [board])
-
   return (
     <div className={`bg-white rounded p-4 w-9/10 max-w-4xl mx-auto text-black`}>
       <div className='flex items-center'>
         <select
           className='border rounded w-full p-2'
           // value={editableCut.material.name}
-          onChange={handleChange}
+          onChange={handleMaterialChange}
           name='material'
         >
           {materials.map((material, index) => (
@@ -58,7 +50,7 @@ const BoardCard: React.FC<Props> = ({
         </select>
         <img
           className='p-2'
-          src={selectedMaterialImage}
+          src={selectedMaterial.imageURL}
           style={{ width: '48px', height: '48px', paddingLeft: '8px' }}
         />
       </div>
@@ -70,7 +62,10 @@ const BoardCard: React.FC<Props> = ({
               updateCut={updateCut}
               cardIndex={cardIndex}
               boardIndex={boardIndex}
-              isSelected={(selectedCutIndex === cardIndex) && (selectedBoardIndex === boardIndex)}
+              isSelected={
+                selectedCutIndex === cardIndex &&
+                selectedBoardIndex === boardIndex
+              }
               onCutClick={handleCutClick}
             ></CutCard>
           </li>

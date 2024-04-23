@@ -3,7 +3,7 @@
 import CutCard from './CutCard'
 import BoardCard from './BoardCard'
 import { Cut } from '../models/Cut'
-import { Board } from '../models/Board'
+import { Board, Material } from '../models/Board'
 import React from 'react'
 import { materials } from './materialImages' // Update this path accordingly
 import { downloadBoardsAsCsv } from './csvUtils'
@@ -11,11 +11,19 @@ import { downloadBoardsAsCsv } from './csvUtils'
 interface Props {
   addCut: (index: number) => void
   addBoard: () => void
-  updateCut: (boardIntex: number, cardIndex: number, changes: Partial<Cut>) => void
+  updateCut: (
+    boardIntex: number,
+    cardIndex: number,
+    changes: Partial<Cut>
+  ) => void
   boards: Board[]
   selectedCutIndex: number | null
   selectedBoardIndex: number | null
   handleCutClick: (boardIndex: number, cutIndex: number) => void
+  handleMaterialChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => void
+  selectedMaterial: Material
 }
 
 const ControlPanel: React.FC<Props> = ({
@@ -26,6 +34,8 @@ const ControlPanel: React.FC<Props> = ({
   selectedCutIndex,
   selectedBoardIndex,
   handleCutClick,
+  handleMaterialChange,
+  selectedMaterial,
 }) => {
   return (
     <div className='p-4 bg-custom-background md:h-screen'>
@@ -41,6 +51,8 @@ const ControlPanel: React.FC<Props> = ({
                 selectedBoardIndex={selectedBoardIndex}
                 handleCutClick={handleCutClick}
                 boardIndex={boardIndex}
+                handleMaterialChange={handleMaterialChange}
+                selectedMaterial={selectedMaterial}
               />
             </li>
           ))}
