@@ -17,7 +17,6 @@ export function downloadBoardsAsCsv(boards: Board[]): void {
   const headers =
     'Name,Width,Height,Depth,Material Name,Material ImageURL,Quantity,Veneer A,Veneer B,Veneer C,Veneer D\n'
 
-  console.log(boards)
   const csvRows = boards
     .flatMap((board) =>
       board.cuts.map(

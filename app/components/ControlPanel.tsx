@@ -4,7 +4,6 @@ import BoardCard from './BoardCard'
 import { Cut } from '../models/Cut'
 import { Board, Material } from '../models/Board'
 import React from 'react'
-import { downloadBoardsAsCsv } from './csvUtils'
 
 interface Props {
   addCut: (index: number) => void
@@ -18,10 +17,7 @@ interface Props {
   selectedCutIndex: number | null
   selectedBoardIndex: number | null
   handleCutClick: (boardIndex: number, cutIndex: number) => void
-  handleMaterialChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => void
-  selectedMaterial: Material
+  handleOrder: (boards: Board[]) => void
 }
 
 const ControlPanel: React.FC<Props> = ({
@@ -32,8 +28,7 @@ const ControlPanel: React.FC<Props> = ({
   selectedCutIndex,
   selectedBoardIndex,
   handleCutClick,
-  handleMaterialChange,
-  selectedMaterial,
+  handleOrder,
 }) => {
   return (
     <div className='p-4 bg-custom-background md:h-screen'>
@@ -49,8 +44,6 @@ const ControlPanel: React.FC<Props> = ({
                 selectedBoardIndex={selectedBoardIndex}
                 handleCutClick={handleCutClick}
                 boardIndex={boardIndex}
-                handleMaterialChange={handleMaterialChange}
-                selectedMaterial={selectedMaterial}
               />
             </li>
           ))}
@@ -66,9 +59,9 @@ const ControlPanel: React.FC<Props> = ({
         <div className='flex justify-center items-center p-4'>
           <button
             className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
-            onClick={() => downloadBoardsAsCsv(boards)}
+            onClick={() => handleOrder(boards)}
           >
-            Wyślij zamówienie
+            Złóż zamówienie
           </button>
         </div>
       </div>

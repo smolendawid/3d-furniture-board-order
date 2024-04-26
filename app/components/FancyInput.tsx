@@ -24,7 +24,7 @@ const FancyInput: React.FC<FancyInputProps> = ({
   const sizeClasses = inputSizes[inputSize] || inputSizes.medium
 
   return (
-    <div className={`flex flex-col items-end gap-6 w-42`}>
+    <div className={`flex flex-col items-end gap-6 w-42 mb-4`}>
       <div className={`relative w-full ${sizeClasses}`}>
         <input
           placeholder=' '

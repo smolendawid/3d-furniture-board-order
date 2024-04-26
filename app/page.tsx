@@ -11,27 +11,38 @@ import Renderer from './components/Renderer'
 import { Cut } from './models/Cut'
 import { Board } from './models/Board'
 import { materials } from './components/materialImages'
-import { Material } from './models/Board'
+import Drawer from './components/Drawer'
+import { downloadBoardsAsCsv } from './components/csvUtils'
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true)
   const [boards, setBoards] = useState<Board[]>([])
   const [selectedBoardIndex, setSelectedBoardIndex] = useState<number>(0)
   const [selectedCutIndex, setSelectedCutIndex] = useState<number>(0)
-  const [selectedMaterial, setSelectedMaterial] = useState<Material>(
-    materials[0]
-  )
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false)
     }, 500) // Change the delay as needed
     return () => clearTimeout(timer)
-  }, [boards, setSelectedMaterial])
+  }, [boards])
 
   const handleCutClick = (boardIndex: number, cutIndex: number) => {
     setSelectedBoardIndex(boardIndex)
     setSelectedCutIndex(cutIndex)
+  }
+
+  const handleOrder = (boards: Board[]) => {
+    setIsDrawerOpen(true)
+  }
+
+  const handleOnApprove = () => {
+    downloadBoardsAsCsv(boards)
+  }
+
+  const toggleDrawer = () => {
+    setIsDrawerOpen(!isDrawerOpen)
   }
 
   const addCut = (index: number) => {
@@ -51,18 +62,6 @@ export default function Home() {
     if (updatedBoards[index]) {
       updatedBoards[index].cuts.push(newCut)
       setBoards(updatedBoards)
-    }
-  }
-
-  const handleMaterialChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target
-    if (name === 'material') {
-      const material = materials.find((material) => material.name === value)
-      if (material) {
-        setSelectedMaterial(material)
-      }
     }
   }
 
@@ -118,8 +117,7 @@ export default function Home() {
                 selectedBoardIndex={selectedBoardIndex}
                 selectedCutIndex={selectedCutIndex}
                 handleCutClick={handleCutClick}
-                handleMaterialChange={handleMaterialChange}
-                selectedMaterial={selectedMaterial}
+                handleOrder={handleOrder}
               />
             </div>
             <div className='w-full md:w-1/2 md:h-100vh fixed right-0 bg-custom-background'>
@@ -127,10 +125,17 @@ export default function Home() {
                 boards[selectedBoardIndex].cuts.length !== 0 && (
                   <Renderer
                     cut={boards[selectedBoardIndex].cuts[selectedCutIndex]}
-                    material={selectedMaterial}
+                    material={boards[selectedBoardIndex].material}
                   />
                 )}
             </div>
+
+            {/* Drawer component */}
+            <Drawer
+              isOpen={isDrawerOpen}
+              onClose={toggleDrawer}
+              handleOnApprove={handleOnApprove}
+            />
           </main>
         </div>
       )}

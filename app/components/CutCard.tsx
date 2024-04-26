@@ -51,7 +51,6 @@ const CutCard: React.FC<
 
   const handleClick = () => {
     onCutClick(boardIndex, cardIndex)
-    console.log(cut)
   }
 
   const selectionClass = isSelected ? 'border-2 border-blue-500' : ''

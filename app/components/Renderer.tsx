@@ -3,10 +3,28 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { Cut } from '../models/Cut'
 import { Material } from '../models/Board'
+import TextSprite from '@seregpie/three.text-sprite'
 
 interface RendererProps {
   cut: Cut
   material: Material
+}
+
+const addVeneerLabel = (
+  scene: THREE.Scene,
+  veneer: boolean,
+  x: number,
+  y: number,
+  positionOffset: number
+) => {
+  const veneerText = veneer ? 'dodana' : 'brak'
+  const veneerLabel = new TextSprite({
+    text: `Okleina: ${veneerText}`,
+    fontSize: 4,
+    color: '#000',
+  })
+  veneerLabel.position.set(x, y, positionOffset)
+  scene.add(veneerLabel)
 }
 
 const Renderer = ({ cut, material }: RendererProps) => {
@@ -24,9 +42,8 @@ const Renderer = ({ cut, material }: RendererProps) => {
       quantity,
     } = cut
 
-    // Calculate the total length needed to fit all cuboids with gaps
-    const gap = 10 * depth // Set gap size to 20% of the depth
-    const totalDepth = quantity * depth + (quantity - 1) * gap // Total space needed
+    const gap = 10 * depth
+    const totalDepth = quantity * depth + (quantity - 1) * gap
 
     const scene = new THREE.Scene()
     scene.background = new THREE.Color('#bcd6e0')
@@ -37,6 +54,7 @@ const Renderer = ({ cut, material }: RendererProps) => {
       0.1,
       1000
     )
+
     const renderer = new THREE.WebGLRenderer()
     renderer.setSize(window.innerWidth, window.innerHeight)
     mountRef.current?.appendChild(renderer.domElement)
@@ -47,13 +65,13 @@ const Renderer = ({ cut, material }: RendererProps) => {
       (texture) => {
         const colorMaterial = new THREE.MeshBasicMaterial({ color: '#8AC' })
         const materials = [
+          veneerC
+            ? new THREE.MeshBasicMaterial({ map: texture })
+            : colorMaterial,
           veneerA
             ? new THREE.MeshBasicMaterial({ map: texture })
             : colorMaterial,
           veneerB
-            ? new THREE.MeshBasicMaterial({ map: texture })
-            : colorMaterial,
-          veneerC
             ? new THREE.MeshBasicMaterial({ map: texture })
             : colorMaterial,
           veneerD
@@ -63,13 +81,62 @@ const Renderer = ({ cut, material }: RendererProps) => {
           new THREE.MeshBasicMaterial({ map: texture }),
         ]
 
-        // Render cuboids based on quantity
         for (let i = 0; i < quantity; i++) {
           const geometry = new THREE.BoxGeometry(width, height, depth)
           const cuboid = new THREE.Mesh(geometry, materials)
-          const positionOffset = i * (depth + gap) - totalDepth / 2 + depth / 2 // Centering the group
-          cuboid.position.set(0, 0, positionOffset) // Position each cuboid with a gap
+          const positionOffset = i * (depth + gap) - totalDepth / 2 + depth / 2
+          cuboid.position.set(0, 0, positionOffset)
           scene.add(cuboid)
+
+          // Adding annotations
+          const widthLabel = new TextSprite({
+            text: `Szerokość: ${width}`,
+            fontSize: 4,
+            color: '#000',
+          })
+          const heightLabel = new TextSprite({
+            text: `Wysokość: ${height}`,
+            fontSize: 4,
+            color: '#000',
+          })
+
+          if (i === quantity - 1) {
+            widthLabel.position.set(width / 2 + 5, 5, positionOffset + 10)
+            heightLabel.position.set(0, height / 2 + 5, positionOffset + 10)
+            heightLabel.rotation.x = Math.PI / 2
+
+            scene.add(widthLabel)
+            scene.add(heightLabel)
+
+            addVeneerLabel(
+              scene,
+              veneerA,
+              -(width / 2) + 10,
+              0,
+              positionOffset + 10
+            )
+            addVeneerLabel(
+              scene,
+              veneerB,
+              0,
+              height / 2 + 10,
+              positionOffset + 10
+            )
+            addVeneerLabel(
+              scene,
+              veneerC,
+              width / 2 + 10,
+              0,
+              positionOffset + 10
+            )
+            addVeneerLabel(
+              scene,
+              veneerD,
+              0,
+              -(height / 2) + 10,
+              positionOffset + 10
+            )
+          }
         }
       },
       undefined,
@@ -85,10 +152,8 @@ const Renderer = ({ cut, material }: RendererProps) => {
     const controls = new OrbitControls(camera, renderer.domElement)
     controls.update()
 
-    // Code to center the cuboid group and adjust camera aspect ratio
-    const aspectRatio =
+    camera.aspect =
       mountRef.current!.clientWidth / mountRef.current!.clientHeight
-    camera.aspect = aspectRatio
     camera.updateProjectionMatrix()
     renderer.setSize(
       mountRef.current!.clientWidth,
@@ -102,7 +167,7 @@ const Renderer = ({ cut, material }: RendererProps) => {
     }
 
     animate()
-
+    console.log(material)
     return () => {
       mountRef.current!.removeChild(renderer.domElement)
     }

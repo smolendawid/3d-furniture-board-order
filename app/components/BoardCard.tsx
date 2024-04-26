@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Cut } from '../models/Cut'
 import { materials } from './materialImages'
 import CutCard from './CutCard'
@@ -17,10 +17,6 @@ interface Props {
   selectedBoardIndex: number | null
   handleCutClick: (boardIndex: number, cardIndex: number) => void
   boardIndex: number
-  handleMaterialChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => void
-  selectedMaterial: Material
 }
 
 const BoardCard: React.FC<Props> = ({
@@ -31,9 +27,25 @@ const BoardCard: React.FC<Props> = ({
   selectedBoardIndex,
   handleCutClick,
   boardIndex,
-  handleMaterialChange,
-  selectedMaterial,
 }) => {
+  //   const [editableCut, setEditableCut] = useState<Cut>(cut)
+  const [selectedMaterialImage, setSelectedMaterialImage] = useState<string>('')
+
+  const handleMaterialChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target
+    if (name === 'material') {
+      const material = materials.find((material) => material.name === value)
+      if (material) {
+        setSelectedMaterialImage(material.imageURL)
+      }
+    }
+  }
+  useEffect(() => {
+    setSelectedMaterialImage(board.material.imageURL)
+  }, [board])
+
   return (
     <div className={`bg-white rounded p-4 w-9/10 max-w-4xl mx-auto text-black`}>
       <div className='flex items-center'>
@@ -51,7 +63,7 @@ const BoardCard: React.FC<Props> = ({
         </select>
         <img
           className='p-2'
-          src={selectedMaterial.imageURL}
+          src={selectedMaterialImage}
           style={{ width: '48px', height: '48px', paddingLeft: '8px' }}
         />
       </div>

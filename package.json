@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@seregpie/three.text-sprite": "^3.2.0",
     "next": "14.1.4",
     "next-i18next": "^15.2.0",
     "react": "^18.2.0",
